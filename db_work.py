@@ -12,13 +12,14 @@ class User(db.Model):
     name = db.Column(db.String(60), unique=True, nullable=False)
     password = db.Column(db.String(60), unique=False, nullable=False)
     admin = db.Column(db.Integer, unique=False, nullable=True)
-    sex = db.Column(db.String(1), unique=False, nullable=False)
-    timer = db.Column(db.Integer, primary_key=True)
-    delegated_tasks = db.Column(db.String(60), unique=True, nullable=False)
+    sex = db.Column(db.String(10), unique=False, nullable=False)
+    timer = db.Column(db.Integer, unique=False, nullable=True)
+    delegated_tasks = db.Column(db.String(60), unique=False, nullable=True)
 
     def __repr__(self):
         return '<User {} {} {}>'.format(
             self.user_id, self.name, self.admin)
+
 
 
 class Task(db.Model):
