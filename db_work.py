@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 import datetime
+import traceback
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -68,6 +69,12 @@ def get_users_made_tasks(user_id):
     return Task.query.filter_by(maker_id=user_id).first()
 
 
+def edit_task(task_id, maker_id, name, description, responsible, priority, limit, tags, category):
+    task = Task.query.filter_by(task_id=task_id).first()
+    db.session.delete(task)
+    add_task(maker_id, name, description, responsible, priority, limit, tags, category)
+
+
 def add_task(maker_id, name, description, responsible, priority, limit, tags, category):
     new_task = Task(maker_id=maker_id,
                     name=name,
@@ -80,8 +87,10 @@ def add_task(maker_id, name, description, responsible, priority, limit, tags, ca
     db.session.add(new_task)
     db.session.commit()
 
+
 def get_categories():
     return Categories.query.all()
+
 
 def delete_task(task_id):
     task = Task.query.filter_by(task_id=task_id).first()
@@ -89,14 +98,18 @@ def delete_task(task_id):
 
 
 def get_delegated_tasks(user):
-    tasks = []
-    if user.delegated_tasks:
-        tasks_ids = user.delegated_tasks.split('|')
-        for i in tasks_ids:
-            tasks.append(Task.query.filter_by(task_id=i).first())
-        return tasks
-    else:
-        return list()
+    try:
+        tasks = []
+        if user.delegated_tasks:
+            tasks_ids = user.delegated_tasks.split('|')
+            for i in tasks_ids:
+                tasks.append(Task.query.filter_by(task_id=i).first())
+            print(tasks)
+            return tasks
+        else:
+            return list()
+    except:
+        traceback.print_exc()
 
 
 class TelegramId(db.Model):
@@ -104,11 +117,20 @@ class TelegramId(db.Model):
     system_id = db.Column(db.Integer, unique=True, nullable=False)
     telegram_id = db.Column(db.Integer, unique=True, nullable=False)
 
+
 class Categories(db.Model):
     primary_key = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=False, nullable=False)
 
+
 def connect_system_telegram(system_id, telegram_id):
+    same1 = TelegramId.query.filter_by(system_id=system_id).first()
+    if same1:
+        db.session.delete(same1)
+    same2 = TelegramId.query.filter_by(telegram_id=telegram_id).first()
+    if same2:
+        db.session.delete(same2)
+    db.session.commit()
     new = TelegramId(system_id=system_id,
                      telegram_id=telegram_id)
     db.session.add(new)
