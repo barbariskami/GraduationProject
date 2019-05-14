@@ -25,7 +25,7 @@ class User(db.Model):
 
 class Task(db.Model):
     task_id = db.Column(db.Integer, primary_key=True)
-    maker_id = db.Column(db.Integer, unique=True, nullable=False)
+    maker_id = db.Column(db.Integer, unique=False, nullable=False)
     name = db.Column(db.String(60), unique=False, nullable=False)
     description = db.Column(db.String(400), unique=False, nullable=False)
     responsible = db.Column(db.String(400), unique=False, nullable=False)
@@ -52,7 +52,7 @@ def get_expired():
     tasks = Task.query.all()
     res = []
     for i in tasks:
-        if i.status > 0:
+        if i.status == 0:
             deadline = i.limit.split('-')
             deadline = (int(deadline[0]) - 2017) * 365 + monthes[int(deadline[1]) - 1] * 30 + int(deadline[2])
             today = str(datetime.datetime.now().date()).split('-')
@@ -84,7 +84,7 @@ def get_user_with_id(user_id):
 
 
 def get_users_made_tasks(user_id):
-    return Task.query.filter_by(maker_id=user_id).first()
+    return Task.query.filter_by(maker_id=user_id).all()
 
 
 def edit_task(task_id, maker_id, name, description, responsible, priority, status, limit, tags, category):
@@ -126,13 +126,13 @@ def delete_task(task_id):
 
 def get_delegated_tasks(user_id):
     try:
-        user = User.query.filter_by(user_id=user_id).all()
-        tasks = []
-        if user.delegated_tasks:
-            tasks_ids = user.delegated_tasks.split('|')
-            for i in tasks_ids:
-                tasks.append(Task.query.filter_by(task_id=i).first())
-            print(tasks)
+        user = User.query.filter_by(user_id=user_id).first()
+        tasks = Task.query.all()
+        for t in tasks:
+            if t.status == 0:
+                resp = t.response.split('|')
+                if str(user.user_id) in resp:
+                    tasks.append(t)
             return tasks
         else:
             return list()
