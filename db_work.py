@@ -69,19 +69,20 @@ def get_users_made_tasks(user_id):
     return Task.query.filter_by(maker_id=user_id).first()
 
 
-def edit_task(task_id, maker_id, name, description, responsible, priority, limit, tags, category):
+def edit_task(task_id, maker_id, name, description, responsible, priority, status, limit, tags, category):
     task = Task.query.filter_by(task_id=task_id).first()
     db.session.delete(task)
-    add_task(maker_id, name, description, responsible, priority, limit, tags, category)
+    add_task(maker_id, name, description, responsible, priority, status, limit, tags, category)
 
 
-def add_task(maker_id, name, description, responsible, priority, limit, tags, category):
+def add_task(maker_id, name, description, responsible, priority, status, limit, tags, category):
     new_task = Task(maker_id=maker_id,
                     name=name,
                     description=description,
                     responsible=responsible,
                     priority=priority,
                     limit=limit,
+                    status=status,
                     tags='|'.join(tags),
                     category=category)
     db.session.add(new_task)
@@ -94,11 +95,13 @@ def get_categories():
 
 def delete_task(task_id):
     task = Task.query.filter_by(task_id=task_id).first()
-    db.session.delete(task)
+    edit_task(task_id, task.maker_id, task.name, task.description, task.responsible, task.priority, -1, task.limit,
+              task.tags, task.category)
 
 
-def get_delegated_tasks(user):
+def get_delegated_tasks(user_id):
     try:
+        user = User.query.filter_by(user_id=user_id).all()
         tasks = []
         if user.delegated_tasks:
             tasks_ids = user.delegated_tasks.split('|')
