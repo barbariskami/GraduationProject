@@ -38,9 +38,6 @@ class Task(db.Model):
             self.task_id, self.maker_id, self.name, self.status, self.limit)
 
 
-db.create_all()
-
-
 def user_exist(name):
     user = User.query.filter_by(name=name).first()
     return user
@@ -88,3 +85,18 @@ def get_delegated_tasks(user):
         tasks.append(Task.query.filter_by(task_id=i).first())
     return tasks
 
+
+class TelegramId(db.Model):
+    primary_key = db.Column(db.Integer, primary_key=True)
+    system_id = db.Column(db.Integer, unique=True, nullable=False)
+    telegram_id = db.Column(db.Integer, unique=True, nullable=False)
+
+
+def connect_system_telegram(system_id, telegram_id):
+    new = TelegramId(system_id=system_id,
+                     telegram_id=telegram_id)
+    db.session.add(new)
+    db.session.commit()
+
+
+db.create_all()
