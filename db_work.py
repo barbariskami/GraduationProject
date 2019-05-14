@@ -66,6 +66,10 @@ def get_user_with_id(user_id):
     return User.query.filter_by(user_id=user_id).first()
 
 
+def get_users_made_tasks(user_id):
+    return Task.query.filter_by(maker_id=user_id).first()
+
+
 def add_task(maker_id, name, description, responsible, priority, limit):
     new_task = Task(maker_id=maker_id,
                     name=name,
