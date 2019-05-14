@@ -31,6 +31,7 @@ class Task(db.Model):
     status = db.Column(db.Integer, unique=False, nullable=True)
     limit = db.Column(db.String(100), unique=False, nullable=False)
     tags = db.Column(db.String(100), unique=False, nullable=False)
+    category = db.Column(db.String(60), unique=False, nullable=False)
 
     def __repr__(self):
         return '<Task {} {} {} {} {}>'.format(
@@ -50,7 +51,8 @@ def insert_user(name, password, sex):
                     password=password,
                     admin=0,
                     sex=sex,
-                    timer=0)
+                    timer=0,
+                    delegated_tasks='')
     db.session.add(new_user)
     db.session.commit()
     return
@@ -81,3 +83,4 @@ def get_delegated_tasks(user):
     for i in tasks_ids:
         tasks.append(Task.query.filter_by(task_id=i).first())
     return tasks
+
