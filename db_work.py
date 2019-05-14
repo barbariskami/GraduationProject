@@ -78,6 +78,11 @@ def add_task(maker_id, name, description, responsible, priority, limit):
     db.session.commit()
 
 
+def delete_task(task_id):
+    task = Task.query.filter_by(task_id=task_id).first()
+    db.session.delete(task)
+
+
 def get_delegated_tasks(user):
     tasks = []
     tasks_ids = user.delegated_tasks.split('|')
