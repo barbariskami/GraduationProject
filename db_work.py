@@ -30,10 +30,14 @@ class Task(db.Model):
     priority = db.Column(db.Integer, unique=False, nullable=False)
     status = db.Column(db.Integer, unique=False, nullable=True)
     limit = db.Column(db.String(100), unique=False, nullable=False)
+    tags = db.Column(db.String(100), unique=False, nullable=False)
 
     def __repr__(self):
         return '<Task {} {} {} {} {}>'.format(
             self.task_id, self.maker_id, self.name, self.status, self.limit)
+
+
+db.create_all()
 
 
 def user_exist(name):
