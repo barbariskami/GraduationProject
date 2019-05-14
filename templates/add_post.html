@@ -9,28 +9,44 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
-    <title>Добавление карты</title>
+    <title>Добавление задачи</title>
 </head>
 <body>
 <h1>Заполните все поля</h1>
 <form method="post" enctype="multipart/form-data">
-    <input type="text" class="form-control" id="map" placeholder="Введите название карты" name="map">
+    <input type="text" class="form-control" id="map" placeholder="Введите название задачи" name="map">
     <div class="form-group">
-        <label for="about">Немного об уровне</label>
+        <label for="about">Расскажите нам о ней</label>
         <textarea class="form-control" id="about" rows="3" name="about"></textarea>
     </div>
     <div class="form-group">
-        <label for="classSelect">Какая локация?</label>
+        <label for="classSelect">Какая приоритетность?</label>
         <select class="form-control" id="classSelect" name="class">
-            <option>Летняя</option>
-            <option>Зимняя</option>
-            <option>Джунгли</option>
-            <option>Пустыня</option>
+            <option>Минимальная(1)</option>
+            <option>Средняя(2)</option>
+            <option>Высокая(3)</option>
+            <option>Гипер(4)</option>
         </select>
     </div>
+    <h2>Выбери ответственных</h2>
+    {% for item in news %}
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="acceptRules" name='{{item}}'>
+        <label class="form-check-label" for="acceptRules">{{item}}</label>
+    </div>
+    {% endfor %}
     <div class="form-group">
-        <label for="txt">Приложите txt с уровнем</label>
-        <input type="file" class="form-control-file" id="txt" name="file">
+         <label for="date">Дата сдачи: </label>
+        <input type="date" id="date" name="date"/>
+    </div>
+    <input type="text" class="form-control" id="tags" placeholder="Введите тэги(#work) через ','" name="mapppp">
+    <div class="form-group">
+        <label for="catSelect">Категория</label>
+        <select class="form-control" id="catSelect" name='cat'>
+            {% for cat in cats %}
+            <option>{{cat}}</option>
+            {% endfor %}
+        </select>
     </div>
     <button type="submit" class="btn btn-primary">Отправить</button>
 </form>

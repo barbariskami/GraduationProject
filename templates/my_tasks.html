@@ -2,13 +2,14 @@
 
 {% block content %}
 <body>
-<h1>Делегированные задачи</h1>
-<h2>Делегированные задачи</h2>
+<h1>Ваши задачи</h1>
+<h2>Ваши задачи</h2>
 <hr class="featurette-divider">
     {% for item in news %}
         <h2>{{item[1]}}</h2>
         <div>{{item[2]}}</div>
-        <a class="btn btn-primary" href="/tasks/{{item[0]}}" role="button">Сделано</a>
+        <a class="btn btn-primary" href="/task/{{item[0]}}" role="button">Delete</a>
+<a class="btn btn-primary" href="/add-task/{{item[0]}}" role="button">Редактировать</a>
     <hr class="featurette-divider">
     {% endfor %}
 </body>
