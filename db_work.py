@@ -13,7 +13,7 @@ class User(db.Model):
     password = db.Column(db.String(60), unique=False, nullable=False)
     admin = db.Column(db.Integer, unique=False, nullable=True)
     sex = db.Column(db.String(1), unique=False, nullable=False)
-    timer = db.Column(db.Integer, primary_key=True)
+    timer = db.Column(db.Integer, unique=True, nullable=True)
     delegated_tasks = db.Column(db.String(60), unique=True, nullable=False)
 
     def __repr__(self):
@@ -36,6 +36,12 @@ class Task(db.Model):
     def __repr__(self):
         return '<Task {} {} {} {} {}>'.format(
             self.task_id, self.maker_id, self.name, self.status, self.limit)
+
+
+class TelegramId(db.Model):
+    primary_key = db.Column(db.Integer, primary_key=True)
+    telegram_id = db.Column(db.Integer, unique=True, nullable=False)
+    system_id = db.Column(db.Integer, unique=True, nullable=False)
 
 
 db.create_all()
@@ -66,6 +72,10 @@ def get_user_with_id(user_id):
     return User.query.filter_by(user_id=user_id).first()
 
 
+def get_user_made_tasks(user_id):
+    return Task.query.filter_by(maker_id=user_id).all()
+
+
 def add_task(maker_id, name, description, responsible, priority, limit):
     new_task = Task(maker_id=maker_id,
                     name=name,
@@ -84,3 +94,9 @@ def get_delegated_tasks(user):
         tasks.append(Task.query.filter_by(task_id=i).first())
     return tasks
 
+
+def connect_system_telegram(system_id, telegram_id):
+    conection = TelegramId(system_id=system_id,
+                           telegram_id=telegram_id)
+    db.session.add(conection)
+    db.session.commit()
