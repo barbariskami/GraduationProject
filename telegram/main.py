@@ -220,7 +220,7 @@ def set_timer(bot, update, job_queue, chat_data):  # Установка тайм
 
 def _task(bot, job):  # Задача для таймера
     code = db_work.Code.query.filter_by(primary_key=1).first()
-    if code.code:
+    if code and code.code:
         bot.send_message(job.context[0], text=code.code)
     code.code = 0
     db_work.db.session.commit()

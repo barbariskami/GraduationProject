@@ -149,6 +149,7 @@ class TelegramId(db.Model):
 class Code(db.Model):
     primary_key = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.Integer, unique=False, nullable=True)
+    user_id = db.Column(db.Integer, unique=False, nullable=True)
 
 
 class Categories(db.Model):

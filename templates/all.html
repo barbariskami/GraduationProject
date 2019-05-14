@@ -1,0 +1,27 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<body>
+<h1>Просрочки</h1>
+<hr class="featurette-divider">
+    {% for item in news %}
+        <h2>{{item[1]}}</h2>
+        <div>{{item[2]}}</div>
+    <hr class="featurette-divider">
+    {% endfor %}
+<h1>Сделанные</h1>
+<hr class="featurette-divider">
+    {% for item in news2 %}
+        <h2>{{item[1]}}</h2>
+        <div>{{item[2]}}</div>
+    <hr class="featurette-divider">
+    {% endfor %}
+<h1>Просрочки</h1>
+<hr class="featurette-divider">
+    {% for item in news3 %}
+        <h2>{{item[1]}}</h2>
+        <div>{{item[2]}}</div>
+    <hr class="featurette-divider">
+    {% endfor %}
+</body>
+{% endblock %}
