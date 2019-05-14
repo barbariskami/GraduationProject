@@ -45,6 +45,24 @@ def user_exist(name):
     return user
 
 
+monthes = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+
+
+def get_expired():
+    tasks = Task.query.all()
+    res = []
+    for i in tasks:
+        if i.status > 0:
+            deadline = i.limit.split('-')
+            deadline = (int(deadline[0]) - 2017) * 365 + monthes[int(deadline[1]) - 1] * 30 + int(deadline[2])
+            today = str(datetime.datetime.now().date()).split('-')
+            today = (int(today[0]) - 2017) * 365 + monthes[int(today[1]) - 1] * 30 + int(today[2])
+            print(today, deadline)
+            if today > deadline:
+                res.append(i)
+    return res
+
+
 def insert_user(name, password, sex):
     new_user = User(name=name,
                     password=password,
@@ -73,6 +91,13 @@ def edit_task(task_id, maker_id, name, description, responsible, priority, statu
     task = Task.query.filter_by(task_id=task_id).first()
     db.session.delete(task)
     add_task(maker_id, name, description, responsible, priority, status, limit, tags, category)
+
+
+def edit_status(task_id, status):
+    task = Task.query.filter_by(task_id=task_id).first()
+    db.session.delete(task)
+    add_task(task.maker_id, task.name, task.description, task.responsible, task.priority, status, task.limit, task.tags,
+             task.category)
 
 
 def add_task(maker_id, name, description, responsible, priority, status, limit, tags, category):
