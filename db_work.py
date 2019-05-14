@@ -128,14 +128,14 @@ def get_delegated_tasks(user_id):
     try:
         user = User.query.filter_by(user_id=user_id).first()
         tasks = Task.query.all()
+        tasks2 = []
         for t in tasks:
             if t.status == 0:
-                resp = t.response.split('|')
+                resp = t.responsible.split('|')
                 if str(user.user_id) in resp:
-                    tasks.append(t)
-            return tasks
-        else:
-            return list()
+                    tasks2.append(t)
+        return tasks2
+
     except:
         traceback.print_exc()
 
@@ -144,6 +144,11 @@ class TelegramId(db.Model):
     primary_key = db.Column(db.Integer, primary_key=True)
     system_id = db.Column(db.Integer, unique=True, nullable=False)
     telegram_id = db.Column(db.Integer, unique=True, nullable=False)
+
+
+class Code(db.Model):
+    primary_key = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.Integer, unique=False, nullable=True)
 
 
 class Categories(db.Model):
